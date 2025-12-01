@@ -10,8 +10,24 @@ on:
 
 jobs:
   build:
-    name: Build on Windows
-    runs-on: windows-latest
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            qt_ver: '5.15.2'
+            qt_arch: 'win64_msvc2019_64'
+            qt_tools: 'tools_msvc2019_64'
+            filename: 'CrcChecksumCalculator-Windows.zip'
+          - os: ubuntu-latest
+            qt_ver: '5.15.2'
+            qt_arch: 'gcc_64'
+            filename: 'CrcChecksumCalculator-Linux.tar.gz'
+          - os: macos-latest
+            qt_ver: '5.15.2'
+            qt_arch: 'clang_64'
+            filename: 'CrcChecksumCalculator-macOS.dmg'
 
     steps:
       - name: Checkout code
@@ -20,38 +36,77 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          version: '5.15.2'
-          host: 'windows'
+          version: ${{ matrix.qt_ver }}
+          host: ${{ matrix.os == 'windows-latest' && 'windows' || matrix.os == 'macos-latest' && 'mac' || 'linux' }}
           target: 'desktop'
-          arch: 'win64_mingw81'
-          tools: 'tools_mingw,qt.tools.win64_mingw810'
+          arch: ${{ matrix.qt_arch }}
+          install-deps: 'true'
 
-      - name: Build Project
+      - name: Install Linux Dependencies
+        if: matrix.os == 'ubuntu-latest'
         run: |
-          $env:PATH += ";${{ env.IQTA_TOOLS }}\mingw810_64\bin"
-          qmake
-          mingw32-make
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev
 
-      - name: Deploy Dependencies
+      - name: Build Project (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          qmake
+          nmake
+
+      - name: Build Project (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: |
+          qmake
+          make
+
+      - name: Package (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: cmd
         run: |
           mkdir release_dist
-          copy release\CrcChecksumCalculator.exe release_dist\
+          copy bin\CrcChecksumCalculator.exe release_dist\
           windeployqt release_dist\CrcChecksumCalculator.exe --dir release_dist --no-translations --compiler-runtime
+          powershell Compress-Archive -Path release_dist\* -DestinationPath ${{ matrix.filename }}
 
-      - name: Zip Release
+      - name: Package (Linux)
+        if: matrix.os == 'ubuntu-latest'
         run: |
-          Compress-Archive -Path release_dist\* -DestinationPath CrcChecksumCalculator-Windows.zip
+          mkdir release_dist
+          cp bin/CrcChecksumCalculator release_dist/
+          tar -czvf ${{ matrix.filename }} -C release_dist .
+
+      - name: Package (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          macdeployqt bin/CrcChecksumCalculator.app -dmg
+          mv bin/CrcChecksumCalculator.dmg ${{ matrix.filename }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CrcChecksumCalculator-Windows
-          path: CrcChecksumCalculator-Windows.zip
+          name: ${{ matrix.filename }}
+          path: ${{ matrix.filename }}
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
 
       - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         with:
-          files: CrcChecksumCalculator-Windows.zip
+          files: |
+            artifacts/CrcChecksumCalculator-Windows.zip/CrcChecksumCalculator-Windows.zip
+            artifacts/CrcChecksumCalculator-Linux.tar.gz/CrcChecksumCalculator-Linux.tar.gz
+            artifacts/CrcChecksumCalculator-macOS.dmg/CrcChecksumCalculator-macOS.dmg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
