@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>styleSheet.qss</file>
+	<file>crc_label.svg</file>
+    </qresource>
+</RCC>

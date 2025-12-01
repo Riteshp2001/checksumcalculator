@@ -1,0 +1,26 @@
+# Qt
+*.user
+*.user.*
+*.qmake.stash
+*.pro.user
+*.pro.user.*
+Makefile*
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+*.o
+*.moc
+
+# Output directories
+debug/
+release/
+bin/
+UI/
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VS Code
+.vscode/

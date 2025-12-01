@@ -1,0 +1,202 @@
+
+
+/* --- GLOBAL WIDGET STYLES --- */
+QWidget {
+    background-color: #f3f3f3; /* Light Grey Background (Mica effect simulation) */
+    font-family:sans-serif, "Segoe UI", "Roboto", "Helvetica Neue";
+    font-size: 14px;
+    color: #202020;
+}
+
+/* --- BUTTONS --- */
+QPushButton {
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid transparent;
+}
+
+/* Primary Action Button (Add Files) */
+QPushButton#btnAddFiles {
+    background-color: #0067c0; /* Fluent Blue */
+    color: white;
+}
+
+QPushButton#btnAddFiles:hover {
+    background-color: #005a9e;
+}
+
+QPushButton#btnAddFiles:pressed {
+    background-color: #004578;
+}
+
+/* Secondary Action Button (Clear) */
+QPushButton#btnClear {
+    background-color: #ffffff;
+    color: #333333;
+    border: 1px solid #d1d1d1;
+}
+
+QPushButton#btnClear:hover {
+    background-color: #e6e6e6;
+    border: 1px solid #b0b0b0;
+}
+
+QPushButton#btnClear:pressed {
+    background-color: #cccccc;
+}
+
+/* --- TABLE WIDGET --- */
+QTableWidget {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    gridline-color: transparent;
+    selection-background-color: #e5f3ff;
+    selection-color: #000000;
+    padding: 5px;
+    outline: none;
+}
+
+/* Table Header */
+QHeaderView::section {
+    background-color: transparent;
+    color: #666666;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    border: none;
+    border-bottom: 3px solid #0067c0; /* Blue accent line under header */
+    padding: 8px;
+    margin-bottom: 5px;
+}
+
+/* Table Rows */
+QTableWidget::item {
+    padding-left: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+QTableWidget::item:selected {
+    background-color: #e5f3ff;
+    color: #000000;
+    border-radius: 4px;
+}
+
+/* --- CUSTOM SCROLLBARS (Fluent Style) --- */
+QScrollBar:vertical {
+    border: none;
+    background: #f3f3f3;
+    width: 10px;
+    margin: 0px 0px 0px 0px;
+    border-radius: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #cccccc;
+    min-height: 30px;
+    border-radius: 5px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #999999;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+QPushButton#btnOpenFolder {
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+}
+
+QPushButton#btnOpenFolder:hover {
+    background-color: #e0e0e0;
+    border: 1px solid #d0d0d0;
+}
+
+QPushButton#btnOpenFolder:pressed {
+    background-color: #d0d0d0;
+}
+
+/* --- COMBO BOX --- */
+QComboBox#checksumCombo {
+    border: 1px solid #d1d1d1;
+    border-radius: 6px;
+    padding: 5px 15px;
+    font-family: "Segoe UI";
+    font-size: 14px;
+    background-color: #ffffff;
+    color: #333333;
+    min-width: 120px;
+}
+
+QComboBox#checksumCombo:hover {
+    border-color: #0067c0;
+    background-color: #f8f9fa;
+}
+
+QComboBox#checksumCombo:focus {
+    border-color: #0067c0;
+}
+
+QComboBox#checksumCombo::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 30px;
+    border-left-width: 0px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+QComboBox#checksumCombo::down-arrow {
+    image: url(:/down_arrow.svg); /* If we had one, but we don't. Using standard arrow styling via border or just letting Qt handle it cleanly */
+    width: 12px;
+    height: 12px;
+}
+
+/* --- VERIFY LABEL --- */
+QLabel#verifyLabel {
+    font-family: "Segoe UI";
+    font-size: 14px;
+    font-weight: 600;
+    color: #555555;
+    margin-right: 5px;
+}
+
+/* --- VERIFY INPUT --- */
+QLineEdit#verifyInput {
+    border: 1px solid #d1d1d1;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: "Segoe UI";
+    font-size: 14px;
+    background-color: #ffffff;
+    color: #333333;
+}
+
+QLineEdit#verifyInput:focus {
+    border-color: #0067c0;
+    background-color: #ffffff;
+}
+
+/* --- CHECKSUM POPUP --- */
+QLabel#checksumPopup {
+    background-color: #ffffff;
+    color: #333333;
+    border: 1px solid #d1d1d1;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: "Consolas", "Courier New", monospace; /* Monospace for checksums */
+    font-size: 13px;
+    font-weight: bold;
+}
