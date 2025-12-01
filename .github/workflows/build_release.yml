@@ -104,6 +104,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
+          name: Release ${{ github.ref_name }}
+          generate_release_notes: true
           files: |
             artifacts/CrcChecksumCalculator-Windows.zip/CrcChecksumCalculator-Windows.zip
             artifacts/CrcChecksumCalculator-Linux.tar.gz/CrcChecksumCalculator-Linux.tar.gz
