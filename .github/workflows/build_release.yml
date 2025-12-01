@@ -28,6 +28,7 @@ jobs:
 
       - name: Build Project
         run: |
+          $env:PATH += ";${{ env.IQTA_TOOLS }}\mingw810_64\bin"
           qmake
           mingw32-make
 
