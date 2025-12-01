@@ -12,7 +12,6 @@ CONFIG(debug,debug|release)
 
 CONFIG(release,debug|release) {
     CONFIG -= console
-    CONFIG -= app_bundle
 }
 
 CONFIG += c++11
