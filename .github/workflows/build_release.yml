@@ -1,0 +1,55 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main, master ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    name: Build on Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '5.15.2'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_mingw81'
+
+      - name: Build Project
+        run: |
+          qmake
+          mingw32-make
+
+      - name: Deploy Dependencies
+        run: |
+          mkdir release_dist
+          copy release\CrcChecksumCalculator.exe release_dist\
+          windeployqt release_dist\CrcChecksumCalculator.exe --dir release_dist --no-translations --compiler-runtime
+
+      - name: Zip Release
+        run: |
+          Compress-Archive -Path release_dist\* -DestinationPath CrcChecksumCalculator-Windows.zip
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CrcChecksumCalculator-Windows
+          path: CrcChecksumCalculator-Windows.zip
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: CrcChecksumCalculator-Windows.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
