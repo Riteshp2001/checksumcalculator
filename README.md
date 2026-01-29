@@ -1,3 +1,5 @@
+# Project is now upgraded : https://github.com/Riteshp2001/PacketForge
+
 # CRC Checksum Calculator
 
 ![CRC Checksum Calculator](images/app_preview.png)
